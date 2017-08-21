@@ -356,6 +356,8 @@ func TestSendMGSeparateDomain(t *testing.T) {
 		toUser              = "test@test.com"
 		exampleMessage      = "Queue. Thank you"
 		exampleID           = "<20111114174239.25659.5817@samples.mailgun.org>"
+		exampleVariableKey  = "test-key"
+		exampleVariableVal  = "test-val"
 	)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		ensure.DeepEqual(t, req.Method, http.MethodPost)
@@ -367,6 +369,7 @@ func TestSendMGSeparateDomain(t *testing.T) {
 		ensure.DeepEqual(t, values.Get("subject"), exampleSubject)
 		ensure.DeepEqual(t, values.Get("text"), exampleText)
 		ensure.DeepEqual(t, values.Get("to"), toUser)
+		ensure.DeepEqual(t, values.Get("v:"+exampleVariableKey), exampleVariableVal)
 		rsp := fmt.Sprintf(`{"message":"%s", "id":"%s"}`, exampleMessage, exampleID)
 		fmt.Fprint(w, rsp)
 	}))
@@ -377,6 +380,7 @@ func TestSendMGSeparateDomain(t *testing.T) {
 
 	m := NewMessage(fromUser, exampleSubject, exampleText, toUser)
 	m.AddDomain(signingDomain)
+	m.AddVariable(exampleVariableKey, exampleVariableVal)
 
 	msg, id, err := mg.Send(m)
 	ensure.Nil(t, err)

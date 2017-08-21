@@ -20,6 +20,7 @@ var _ = Describe("/v3/{domain}/tags", func() {
 	var err error
 
 	BeforeSuite(func() {
+		t = GinkgoT()
 		mg, err = NewMailgunFromEnv()
 		msg := mg.NewMessage(fromUser, exampleSubject, exampleText, reqEnv(t, "MG_EMAIL_TO"))
 		msg.AddTag("newsletter")

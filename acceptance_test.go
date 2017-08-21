@@ -22,7 +22,7 @@ import (
 // environment variables.  If these variables aren't set, we need to fail the test early.
 func reqEnv(t ginkgo.GinkgoTInterface, variableName string) string {
 	value := os.Getenv(variableName)
-	ensure.True(t, value != "")
+	ensure.True(t, value != "", fmt.Sprintf("%s must be set", variableName))
 	return value
 }
 
